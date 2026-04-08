@@ -31,11 +31,11 @@ public class HttpClientWrapper {
         if (baseUrl == null || baseUrl.isBlank()) {
             throw new IllegalArgumentException("baseUrl must not be null or empty");
         }
-        
+
         this.apiKey = apiKey;
         String normalizedBaseUrl = baseUrl.trim();
-        this.baseUrl = normalizedBaseUrl.endsWith("/") 
-                ? normalizedBaseUrl.substring(0, normalizedBaseUrl.length() - 1) 
+        this.baseUrl = normalizedBaseUrl.endsWith("/")
+                ? normalizedBaseUrl.substring(0, normalizedBaseUrl.length() - 1)
                 : normalizedBaseUrl;
         this.version = version != null ? version : "v1";
         this.timeoutSeconds = timeoutSeconds > 0 ? timeoutSeconds : 30;
@@ -71,7 +71,6 @@ public class HttpClientWrapper {
     private JsonNode requestPublic(String method, String endpoint, Map<String, Object> body)
             throws IOException, InterruptedException {
 
-        // Normalize endpoint: ensure it starts with a single leading slash
         String normalizedEndpoint = endpoint;
         if (normalizedEndpoint == null || normalizedEndpoint.isEmpty()) {
             normalizedEndpoint = "/";
@@ -123,13 +122,12 @@ public class HttpClientWrapper {
             throw new UpayException(message, code, status);
         }
 
-        return json;
+        return unwrapEnvelope(json);
     }
 
     private JsonNode request(String method, String endpoint, Map<String, Object> body, Map<String, Object> params)
             throws IOException, InterruptedException {
 
-        // Normalize endpoint: ensure it starts with a single leading slash
         String normalizedEndpoint = endpoint;
         if (normalizedEndpoint == null || normalizedEndpoint.isEmpty()) {
             normalizedEndpoint = "/";
@@ -194,6 +192,33 @@ public class HttpClientWrapper {
             throw new UpayException(message, code, status);
         }
 
+        return unwrapEnvelope(json);
+    }
+
+    /**
+     * Desempacota o envelope padrão: { success: true, data: X, pagination?: Y }
+     */
+    private JsonNode unwrapEnvelope(JsonNode json) {
+        if (json != null && json.isObject()
+                && json.path("success").asBoolean(false)
+                && json.has("data")) {
+
+            JsonNode data = json.get("data");
+
+            if (json.has("pagination")) {
+                com.fasterxml.jackson.databind.node.ObjectNode wrapper = mapper.createObjectNode();
+                wrapper.set("data", data);
+                wrapper.set("pagination", json.get("pagination"));
+                return wrapper;
+            }
+            if (json.has("meta")) {
+                com.fasterxml.jackson.databind.node.ObjectNode wrapper = mapper.createObjectNode();
+                wrapper.set("data", data);
+                wrapper.set("meta", json.get("meta"));
+                return wrapper;
+            }
+            return data;
+        }
         return json;
     }
 }
