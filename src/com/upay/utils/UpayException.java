@@ -1,4 +1,4 @@
-package com.upay.sdk.utils;
+package com.upay.utils;
 
 public class UpayException extends RuntimeException {
 

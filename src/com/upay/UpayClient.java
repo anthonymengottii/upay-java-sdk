@@ -1,11 +1,11 @@
-package com.upay.sdk;
+package com.upay;
 
-import com.upay.sdk.http.HttpClientWrapper;
-import com.upay.sdk.resources.PaymentLinksResource;
-import com.upay.sdk.resources.TransactionsResource;
-import com.upay.sdk.resources.ProductsResource;
-import com.upay.sdk.resources.CouponsResource;
-import com.upay.sdk.utils.WebhookUtils;
+import com.upay.http.HttpClientWrapper;
+import com.upay.resources.PaymentLinksResource;
+import com.upay.resources.TransactionsResource;
+import com.upay.resources.ProductsResource;
+import com.upay.resources.CouponsResource;
+import com.upay.utils.WebhookUtils;
 
 public class UpayClient {
 

@@ -1,7 +1,7 @@
-package com.upay.sdk.resources;
+package com.upay.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.upay.sdk.http.HttpClientWrapper;
+import com.upay.http.HttpClientWrapper;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,7 +1,7 @@
-package com.upay.sdk.examples;
+package com.upay.examples;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.upay.sdk.UpayClient;
+import com.upay.UpayClient;
 
 public class Main {
     public static void main(String[] args) throws Exception {

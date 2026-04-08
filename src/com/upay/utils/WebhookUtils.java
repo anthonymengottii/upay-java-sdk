@@ -1,4 +1,4 @@
-package com.upay.sdk.utils;
+package com.upay.utils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -9,8 +9,8 @@ public final class WebhookUtils {
     private WebhookUtils() {}
 
     public static boolean verifySignature(String payload, String signature, String secret) {
-        if (payload == null || payload.trim().isEmpty() || 
-            signature == null || signature.trim().isEmpty() || 
+        if (payload == null || payload.trim().isEmpty() ||
+            signature == null || signature.trim().isEmpty() ||
             secret == null || secret.trim().isEmpty()) {
             return false;
         }

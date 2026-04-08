@@ -1,8 +1,8 @@
-package com.upay.sdk.http;
+package com.upay.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.upay.sdk.utils.UpayException;
+import com.upay.utils.UpayException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -88,7 +88,7 @@ public class HttpClientWrapper {
             uri = URI.create(url.toString());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
-                    "Invalid URL constructed: " + url.toString() + ". Original error: " + e.getMessage(), e);
+                    "Invalid URL constructed: " + url + ". Original error: " + e.getMessage(), e);
         }
 
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -104,25 +104,7 @@ public class HttpClientWrapper {
         }
 
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
-        int status = response.statusCode();
-        String respBody = response.body();
-
-        JsonNode json;
-        try {
-            json = respBody != null && !respBody.isEmpty()
-                    ? mapper.readTree(respBody)
-                    : mapper.createObjectNode();
-        } catch (Exception e) {
-            json = mapper.createObjectNode();
-        }
-
-        if (status >= 400) {
-            String message = json.path("message").asText("HTTP " + status);
-            String code = json.path("code").asText(null);
-            throw new UpayException(message, code, status);
-        }
-
-        return unwrapEnvelope(json);
+        return parseResponse(response);
     }
 
     private JsonNode request(String method, String endpoint, Map<String, Object> body, Map<String, Object> params)
@@ -157,7 +139,7 @@ public class HttpClientWrapper {
             uri = URI.create(url.toString());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
-                    "Invalid URL constructed: " + url.toString() + ". Original error: " + e.getMessage(), e);
+                    "Invalid URL constructed: " + url + ". Original error: " + e.getMessage(), e);
         }
 
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -174,6 +156,10 @@ public class HttpClientWrapper {
         }
 
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        return parseResponse(response);
+    }
+
+    private JsonNode parseResponse(HttpResponse<String> response) throws IOException {
         int status = response.statusCode();
         String respBody = response.body();
 

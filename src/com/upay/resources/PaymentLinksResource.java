@@ -1,14 +1,14 @@
-package com.upay.sdk.resources;
+package com.upay.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.upay.sdk.http.HttpClientWrapper;
+import com.upay.http.HttpClientWrapper;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 public class PaymentLinksResource {
 
@@ -34,7 +34,6 @@ public class PaymentLinksResource {
             body.put("amount", amount);
         }
         if (options != null) {
-            // Defensive copy: only add options that don't override validated fields
             for (Map.Entry<String, Object> entry : options.entrySet()) {
                 String key = entry.getKey();
                 if (!"title".equals(key) && !"amount".equals(key)) {
@@ -43,7 +42,6 @@ public class PaymentLinksResource {
             }
         }
 
-        // Return full response for consistency
         return http.post("/payment-links", body);
     }
 
@@ -60,7 +58,6 @@ public class PaymentLinksResource {
             throw new IllegalArgumentException("ID is required");
         }
         String encodedId = URLEncoder.encode(id, StandardCharsets.UTF_8);
-        // Return full response for consistency
         return http.get("/payment-links/" + encodedId, null);
     }
 }
