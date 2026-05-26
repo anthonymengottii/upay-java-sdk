@@ -60,6 +60,10 @@ public class HttpClientWrapper {
         return request("PATCH", endpoint, body, null);
     }
 
+    public JsonNode put(String endpoint, Map<String, Object> body) throws IOException, InterruptedException {
+        return request("PUT", endpoint, body, null);
+    }
+
     public JsonNode delete(String endpoint) throws IOException, InterruptedException {
         return request("DELETE", endpoint, null, null);
     }

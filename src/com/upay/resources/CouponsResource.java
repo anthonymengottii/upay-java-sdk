@@ -13,6 +13,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CouponsResource {
 
@@ -20,7 +21,41 @@ public class CouponsResource {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public CouponsResource(HttpClientWrapper http) {
-        this.http = http;
+        this.http = Objects.requireNonNull(http, "HttpClientWrapper cannot be null");
+    }
+
+    /** Lista cupons */
+    public JsonNode list(Integer page, Integer limit) throws IOException, InterruptedException {
+        Map<String, Object> params = new HashMap<>();
+        if (page != null) params.put("page", page);
+        if (limit != null) params.put("limit", limit);
+        return http.get("/coupons", params);
+    }
+
+    /** Cria um cupom */
+    public JsonNode create(Map<String, Object> data) throws IOException, InterruptedException {
+        if (data == null || data.get("code") == null || data.get("code").toString().isBlank()) {
+            throw new IllegalArgumentException("Código do cupom é obrigatório");
+        }
+        return http.post("/coupons", data);
+    }
+
+    /** Obtém um cupom por ID */
+    public JsonNode getCoupon(String id) throws IOException, InterruptedException {
+        if (id == null || id.isBlank()) throw new IllegalArgumentException("ID é obrigatório");
+        return http.get("/coupons/" + id, null);
+    }
+
+    /** Atualiza um cupom */
+    public JsonNode update(String id, Map<String, Object> data) throws IOException, InterruptedException {
+        if (id == null || id.isBlank()) throw new IllegalArgumentException("ID é obrigatório");
+        return http.patch("/coupons/" + id, data);
+    }
+
+    /** Deleta um cupom */
+    public JsonNode delete(String id) throws IOException, InterruptedException {
+        if (id == null || id.isBlank()) throw new IllegalArgumentException("ID é obrigatório");
+        return http.delete("/coupons/" + id);
     }
 
     /**

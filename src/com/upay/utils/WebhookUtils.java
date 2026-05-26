@@ -8,6 +8,27 @@ public final class WebhookUtils {
 
     private WebhookUtils() {}
 
+    // Tipos de eventos de webhook
+    public static final String EVENT_TRANSACTION_CREATED        = "transaction.created";
+    public static final String EVENT_TRANSACTION_PAID           = "transaction.paid";
+    public static final String EVENT_TRANSACTION_FAILED         = "transaction.failed";
+    public static final String EVENT_TRANSACTION_CANCELLED      = "transaction.cancelled";
+    public static final String EVENT_TRANSACTION_REFUNDED       = "transaction.refunded";
+    public static final String EVENT_PAYMENT_LINK_CREATED       = "payment_link.created";
+    public static final String EVENT_PAYMENT_LINK_UPDATED       = "payment_link.updated";
+    public static final String EVENT_PAYMENT_LINK_DELETED       = "payment_link.deleted";
+    public static final String EVENT_SUBSCRIPTION_CREATED       = "subscription.created";
+    public static final String EVENT_SUBSCRIPTION_CANCELLED     = "subscription.cancelled";
+    public static final String EVENT_SUBSCRIPTION_PAUSED        = "subscription.paused";
+    public static final String EVENT_SUBSCRIPTION_RESUMED       = "subscription.resumed";
+    public static final String EVENT_SUBSCRIPTION_PAYMENT_FAILED = "subscription.payment_failed";
+    public static final String EVENT_SUBSCRIPTION_RENEWED       = "subscription.renewed";
+    public static final String EVENT_WITHDRAWAL_CREATED         = "withdrawal.created";
+    public static final String EVENT_WITHDRAWAL_COMPLETED       = "withdrawal.completed";
+    public static final String EVENT_WITHDRAWAL_FAILED          = "withdrawal.failed";
+    public static final String EVENT_CHECKOUT_CREATED           = "checkout.created";
+    public static final String EVENT_CHECKOUT_COMPLETED         = "checkout.completed";
+
     public static boolean verifySignature(String payload, String signature, String secret) {
         if (payload == null || payload.trim().isEmpty() ||
             signature == null || signature.trim().isEmpty() ||
